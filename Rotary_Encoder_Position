@@ -1,0 +1,24 @@
+import serial
+import vpython
+import numpy as np
+import struct
+
+# If the encoder were accurate, this would work
+# It doesn't register changes in position if they're too fast,
+# but that 'too fast' is really not fast at all
+
+DataAcq = serial.Serial('COM10',9600)
+i = 0 # Counter for numRevolutions
+while True:
+    if (DataAcq.inWaiting() == 0):
+        pass
+    Pos = DataAcq.readline() # bytes
+    Pos = int(Pos)
+    while Pos - 1024 != 0:
+        RealPos = Pos - 1024
+        i = i + 1
+    Encoder = sphere(radius = 1, color = color.blue, pos = vector(0,0,0),make_trail = True, retain = 100)
+    angle = RealPos*(2*np.pi/1024) - np.pi/2 # angle in rads
+    X = 10*np.cos(angle)
+    Y = 10*np.sin(angle)
+    Encoder.pos = vector(X,Y,0)
